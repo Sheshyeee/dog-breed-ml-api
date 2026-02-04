@@ -1,9 +1,20 @@
+# Core FastAPI dependencies
 fastapi==0.109.0
 uvicorn[standard]==0.27.0
 python-multipart==0.0.9
+
+# PyTorch - compatible versions
 torch>=2.0.0
 torchvision>=0.15.0
-pillow==10.2.0
-numpy==1.26.3
-pydantic==2.5.3
-python-jose[cryptography]==3.3.0
+
+# Image processing - updated for Python 3.13 compatibility
+Pillow>=10.3.0
+
+# Data science
+numpy>=1.24.0
+
+# HTTP client (for health checks)
+requests>=2.31.0
+
+# Python type hints
+pydantic>=2.0.0
