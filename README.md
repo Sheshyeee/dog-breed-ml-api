@@ -1,4 +1,14 @@
-# Dog Breed ML API - FastAPI Service
+---
+title: Dog Breed ML API
+emoji: 🐕
+colorFrom: blue
+colorTo: purple
+sdk: docker
+app_file: main.py
+pinned: false
+---
+
+# 🐕 Dog Breed ML API - FastAPI Service
 
 Standalone Python FastAPI service for dog breed identification and learning system.
 
@@ -11,61 +21,28 @@ Laravel Backend (PHP) ←→ FastAPI ML Service (Python)
 Mobile App + Web Frontend
 ```
 
-## 📁 Required Files
+## 🌟 Features
 
-Place these files from your Laravel `ml/` directory into this folder:
-
-1. `best_model.pth` - Your trained PyTorch model
-2. `breed_mapping.json` - Breed index to name mapping
-3. `references.json` - Learned breed references (will be created if doesn't exist)
-
-## 🚀 Local Development
-
-### 1. Setup Python Environment
-
-```bash
-# Create virtual environment
-python -m venv venv
-
-# Activate (Windows)
-venv\Scripts\activate
-
-# Activate (Mac/Linux)
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
-### 2. Run the Server
-
-```bash
-# Development mode with auto-reload
-uvicorn main:app --reload --host 0.0.0.0 --port 8001
-
-# Production mode
-uvicorn main:app --host 0.0.0.0 --port 8001 --workers 4
-```
-
-### 3. Test the API
-
-Visit: `http://localhost:8001/docs`
-
-This will show the interactive Swagger UI documentation.
+- **🎯 High-Accuracy Predictions**: ConvNeXt-Large based model for 120 dog breeds
+- **🧠 Adaptive Learning**: Memory system that learns from corrections
+- **📊 Confidence Scoring**: Detailed prediction confidence with top-5 results
+- **🔄 Smart Decision Making**: Combines model predictions with learned patterns
 
 ## 📡 API Endpoints
 
 ### POST /predict
+
 Upload an image to get breed prediction.
 
 **Request:**
+
 ```bash
-curl -X POST "http://localhost:8001/predict" \
-  -H "Content-Type: multipart/form-data" \
+curl -X POST "https://YOUR_SPACE.hf.space/predict" \
   -F "file=@dog_image.jpg"
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -73,8 +50,7 @@ curl -X POST "http://localhost:8001/predict" \
   "confidence": 0.9234,
   "top_5": [
     {"breed": "Golden Retriever", "confidence": 0.9234, "source": "model"},
-    {"breed": "Labrador Retriever", "confidence": 0.0543, "source": "model"},
-    ...
+    {"breed": "Labrador Retriever", "confidence": 0.0543, "source": "model"}
   ],
   "is_memory_match": false,
   "memory_info": {...},
@@ -83,17 +59,19 @@ curl -X POST "http://localhost:8001/predict" \
 ```
 
 ### POST /learn
+
 Add a corrected breed to the learning system.
 
 **Request:**
+
 ```bash
-curl -X POST "http://localhost:8001/learn" \
-  -H "Content-Type: multipart/form-data" \
+curl -X POST "https://YOUR_SPACE.hf.space/learn" \
   -F "file=@dog_image.jpg" \
   -F "breed=Aspin"
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -103,74 +81,123 @@ curl -X POST "http://localhost:8001/learn" \
 }
 ```
 
+### GET /health
+
+Check API health status.
+
 ### GET /memory/stats
+
 Get learning statistics.
 
 ### DELETE /memory/clear
+
 Clear all learned references.
 
-## 🐳 Docker Deployment
+## 🚀 Usage Examples
 
-```bash
-# Build image
-docker build -t dog-breed-ml-api .
+### JavaScript/Fetch
 
-# Run container
-docker run -p 8001:8001 \
-  -v $(pwd)/references.json:/app/references.json \
-  dog-breed-ml-api
+```javascript
+const formData = new FormData();
+formData.append("file", fileInput.files[0]);
+
+const response = await fetch("https://YOUR_SPACE.hf.space/predict", {
+  method: "POST",
+  body: formData,
+});
+
+const data = await response.json();
+console.log(`Breed: ${data.breed}, Confidence: ${data.confidence}`);
 ```
 
-## ☁️ Deploy to Render
+### Python/Requests
 
-1. Push code to GitHub
-2. Go to [Render Dashboard](https://dashboard.render.com)
-3. Click "New +" → "Web Service"
-4. Connect your repository
-5. Configure:
-   - **Name:** `dog-breed-ml-api`
-   - **Environment:** `Python 3`
-   - **Build Command:** `pip install -r requirements.txt`
-   - **Start Command:** `uvicorn main:app --host 0.0.0.0 --port $PORT`
-   - **Instance Type:** Free or Starter
-6. Add environment variables:
-   - `PYTHON_VERSION`: `3.10.0`
-7. Deploy!
+```python
+import requests
 
-**Important:** Upload `best_model.pth` and `breed_mapping.json` as persistent files in Render.
+url = "https://YOUR_SPACE.hf.space/predict"
+files = {"file": open("dog_image.jpg", "rb")}
+response = requests.post(url, files=files)
+result = response.json()
 
-## ☁️ Deploy to Railway
+print(f"Breed: {result['breed']}")
+print(f"Confidence: {result['confidence']}")
+```
 
-1. Push code to GitHub
-2. Go to [Railway](https://railway.app)
-3. Click "New Project" → "Deploy from GitHub repo"
-4. Select your repository
-5. Railway will auto-detect Python and deploy
-6. Get your deployment URL (e.g., `https://your-app.railway.app`)
+### PHP/Laravel
 
-## 🔗 Connecting to Laravel
+```php
+use Illuminate\Support\Facades\Http;
 
-Once deployed, update your Laravel `.env`:
+$response = Http::attach(
+    'file', file_get_contents($imagePath), 'dog.jpg'
+)->post('https://YOUR_SPACE.hf.space/predict');
+
+$result = $response->json();
+echo "Breed: " . $result['breed'];
+```
+
+## 🧠 How the Learning System Works
+
+1. **Initial Prediction**: Model makes prediction based on training
+2. **Memory Check**: Compares image with learned references
+3. **Smart Decision**: Weighs model confidence vs memory similarity
+4. **Learning**: Stores corrections to improve future predictions
+5. **Adaptive**: Gets better with each correction
+
+## 📊 Model Information
+
+- **Architecture**: ConvNeXt-Large
+- **Input Size**: 384x384 pixels
+- **Classes**: 120 dog breeds
+- **Feature Dimension**: 512-D embeddings
+- **Framework**: PyTorch
+
+## 🎯 Supported Breeds
+
+The API recognizes 120 dog breeds including:
+
+- Chihuahua, Golden Retriever, Labrador Retriever
+- German Shepherd, Bulldog, Poodle
+- Siberian Husky, Beagle, Rottweiler
+- And 111 more breeds!
+
+## 🔗 Integration with Your Project
+
+### Laravel Backend
+
+Update your `.env`:
 
 ```env
-# Your deployed FastAPI service URL
-PYTHON_ML_API_URL=https://dog-breed-ml-api.onrender.com
-# or
-PYTHON_ML_API_URL=https://your-app.railway.app
+PYTHON_ML_API_URL=https://YOUR_USERNAME-dog-breed-ml-api.hf.space
 ```
 
-## 📊 Performance
+### Frontend JavaScript
 
-- **Cold start:** ~2-5 seconds
-- **Prediction:** ~300-800ms per image
-- **Memory usage:** ~1.5GB (model + runtime)
+```javascript
+const API_URL = "https://YOUR_USERNAME-dog-breed-ml-api.hf.space";
+```
+
+## 📚 Interactive Documentation
+
+Visit `/docs` for full Swagger/OpenAPI documentation with interactive testing.
+
+## 📝 Performance
+
+- **Response Time**: ~500-1000ms per prediction
+- **Memory Usage**: ~2GB (model + runtime)
+- **Concurrent Requests**: Supported
 
 ## 🔒 Security Notes
 
-- In production, replace `allow_origins=["*"]` with your actual domains
-- Add API key authentication if needed
-- Use HTTPS in production
+- CORS is configured for cross-origin requests
+- For production, update `allow_origins` to your specific domains
+- Consider adding API key authentication for production use
 
-## 📝 License
+## 📧 Support
 
-Same license as your main project.
+For issues or questions, check the interactive docs at `/docs`
+
+---
+
+**Built with ❤️ using FastAPI, PyTorch, and Hugging Face Spaces**

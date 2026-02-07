@@ -43,3 +43,14 @@ logs/
 .pytest_cache/
 .coverage
 htmlcov/
+# Git LFS configuration for large model files
+
+# Track PyTorch model files with Git LFS
+*.pth filter=lfs diff=lfs merge=lfs -text
+*.pt filter=lfs diff=lfs merge=lfs -text
+
+# Track other potential large files
+*.pb filter=lfs diff=lfs merge=lfs -text
+*.h5 filter=lfs diff=lfs merge=lfs -text
+*.onnx filter=lfs diff=lfs merge=lfs -text
+*.pkl filter=lfs diff=lfs merge=lfs -text
