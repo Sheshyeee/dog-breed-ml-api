@@ -836,7 +836,7 @@ async def clear_memory():
     """Clear all learned references (admin only)."""
     try:
         save_references([])
-        return {"success": True, "message": "Memory cleared successfully"}
+        return {"success": True, "message": "Memory cleare successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to clear memory: {str(e)}")
 
